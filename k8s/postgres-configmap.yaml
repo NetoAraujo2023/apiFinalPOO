@@ -1,0 +1,57 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: init-sql-script
+  namespace: default
+data:
+  init.sql: |
+    CREATE TABLE cliente (
+        id SERIAL PRIMARY KEY,
+        nome text,
+        data_nascimento DATE NOT NULL,
+        cpf VARCHAR(14) UNIQUE NOT NULL
+    );
+
+    CREATE TABLE funcionario (
+        id SERIAL PRIMARY KEY,
+        nome text,
+        cargo VARCHAR(100),
+        salario NUMERIC(10, 2)
+    );
+
+    CREATE TABLE carro (
+        id SERIAL PRIMARY KEY,
+        placa VARCHAR(10) NOT NULL UNIQUE,
+        modelo VARCHAR(100) NOT NULL,
+        quantidade_de_portas INTEGER NOT NULL
+    );
+
+    CREATE TABLE moto (
+        id SERIAL PRIMARY KEY,
+        placa VARCHAR(10) NOT NULL UNIQUE,
+        modelo VARCHAR(100) NOT NULL,
+        cilindrada INTEGER NOT NULL
+    );
+
+    CREATE TABLE produto (
+        id SERIAL PRIMARY KEY,
+        nome_produto VARCHAR(100) NOT NULL,
+        preco NUMERIC(10, 2) NOT NULL,
+        categoria VARCHAR(100)
+    );
+
+    CREATE TABLE pedido (
+        id SERIAL PRIMARY KEY,
+        codigo_pedido VARCHAR(50) NOT NULL,
+        data_pedido DATE NOT NULL,
+        id_cliente INTEGER REFERENCES cliente(id),
+        id_entregador INTEGER REFERENCES funcionario(id)
+    );
+
+    CREATE TABLE itens_pedido (
+        id SERIAL PRIMARY KEY,
+        id_pedido INTEGER REFERENCES pedido(id),
+        id_produto INTEGER REFERENCES produto(id),
+        quantidade INTEGER NOT NULL,
+        preco_unitario NUMERIC(10,2) NOT NULL
+    );
